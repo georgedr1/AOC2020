@@ -22,3 +22,7 @@ IntArray ReadIntArray(string filename);
 int FindPairWithSum(int* array, int length, int sum);
 
 int FindTripleWithSum(int* array, int length, int sum);
+
+int ParsePasswordFileByCount(string filename);
+
+int ParsePasswordFileByPos(string filename);

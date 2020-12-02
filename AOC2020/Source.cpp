@@ -21,17 +21,26 @@ int main()
 
 	IntArray data;
 
-	data = ReadIntArray(filename);
+	
 
-	cout << "\nThere are " << data.length << " values.\n";
 	
 	switch (day) {
 	case 1:
+		data = ReadIntArray(filename);
+
+		cout << "\nThere are " << data.length << " values.\n";
+
 		int ans;
 		ans = FindPairWithSum(data.values, data.length, 2020);
 		cout << "The first answer is: " << ans << "\n";
 		ans = FindTripleWithSum(data.values, data.length, 2020);
 		cout << "The second answer is: " << ans << "\n";
+		break;
+	case 2:
+		ans = ParsePasswordFileByCount(filename);
+		cout << "There are " << ans << " valid passwords by the count rule.\n";
+		ans = ParsePasswordFileByPos(filename);
+		cout << "There are " << ans << " valid passwords by the position rule.\n";
 		break;
 	default:
 		cout << "Invalid answer\n";
@@ -116,4 +125,89 @@ int FindTripleWithSum(int* array, int length, int sum) {
 	}
 
 	return 0;
+}
+
+
+// Day 2 TODO: split into parser and processor
+int ParsePasswordFileByCount(string filename) {
+	size_t dashPlace;
+	size_t firstSpacePlace;
+	int min;
+	int max;
+	char toFind;
+	int foundCount;
+	string line;
+
+	int goodCount = 0;
+
+	ifstream file;
+
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+
+		while (getline(file, line)) {
+			foundCount = 0;
+			dashPlace = line.find_first_of('-');
+			firstSpacePlace = line.find_first_of(' ');
+
+			min = stoi(line.substr(0, dashPlace));
+			max = stoi(line.substr(dashPlace + 1, firstSpacePlace));
+			toFind = line.at(firstSpacePlace + 1);
+			line = line.substr(firstSpacePlace + 4, string::npos);
+
+			for (int i = 0; i < line.length(); i++)
+			{
+				if (line.at(i) == toFind) {
+					foundCount++;
+					if (foundCount > max) break;
+				}
+			}
+			if (foundCount >= min and foundCount <= max) goodCount++;
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return goodCount;
+}
+
+// Day 2
+int ParsePasswordFileByPos(string filename) {
+	size_t dashPlace;
+	size_t firstSpacePlace;
+	int pos1;
+	int pos2;
+	char toFind;
+	string line;
+
+	int goodCount = 0;
+
+	ifstream file;
+
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+
+		while (getline(file, line)) {
+			dashPlace = line.find_first_of('-');
+			firstSpacePlace = line.find_first_of(' ');
+
+			pos1 = stoi(line.substr(0, dashPlace));
+			pos2 = stoi(line.substr(dashPlace + 1, firstSpacePlace));
+			toFind = line.at(firstSpacePlace + 1);
+			line = line.substr(firstSpacePlace + 4, string::npos);
+
+			if ((line.at(pos1 - 1) == toFind) != (line.at(pos2 - 1) == toFind)) goodCount++;
+		}
+		cout << "\n";
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return goodCount;
 }
