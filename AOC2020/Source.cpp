@@ -9,6 +9,9 @@ using namespace std;
 int main()
 {
 	int day;
+
+	int ans;
+	double dans;
 	string filename;
 	cout << "What Day is it? ";
 	cin >> day;
@@ -30,7 +33,6 @@ int main()
 
 		cout << "\nThere are " << data.length << " values.\n";
 
-		int ans;
 		ans = FindPairWithSum(data.values, data.length, 2020);
 		cout << "The first answer is: " << ans << "\n";
 		ans = FindTripleWithSum(data.values, data.length, 2020);
@@ -41,6 +43,28 @@ int main()
 		cout << "There are " << ans << " valid passwords by the count rule.\n";
 		ans = ParsePasswordFileByPos(filename);
 		cout << "There are " << ans << " valid passwords by the position rule.\n";
+		break;
+	case 3:
+		dans = CollisionDetection(filename, 3, 1);
+		cout << "You hit " << to_string(dans) << " trees.\n";
+		dans = dans * CollisionDetection(filename, 1, 1);
+		dans = dans * CollisionDetection(filename, 5, 1);
+		dans = dans * CollisionDetection(filename, 7, 1);
+		dans = dans * CollisionDetection(filename, 1, 2);
+		cout << "You hit " << to_string(dans) << " trees.\n";
+		break;
+	case 4:
+		start = clock();
+		ans = PassportChecker(filename, false, false);
+		cout << "There are " << ans << " valid passports.\n";
+		duration = (clock() - start);
+		cout << "Finished in " << duration << " ms\n";
+
+		start = clock();
+		ans = PassportChecker(filename, false, true);
+		cout << "There are " << ans << " validated passports.\n";
+		duration = (clock() - start);
+		cout << "Finished in " << duration << " ms\n";
 		break;
 	default:
 		cout << "Invalid answer\n";
@@ -210,4 +234,140 @@ int ParsePasswordFileByPos(string filename) {
 	else cout << "Error Reading";
 
 	return goodCount;
+}
+
+
+// Day 3
+// x is postive to the right, y is positive down
+double CollisionDetection(string filename, int xMove, int yMove) {
+
+	int xPos = 0;
+	int yDiff = yMove;
+
+	int xMax;
+	string line;
+
+	int trees = 0;
+
+	ifstream file;
+
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+
+		while (getline(file, line)) {
+			if (yMove > yDiff) yDiff++;
+			else {
+				xMax = line.length();
+				if (line.at(xPos) == '#') trees++;
+				xPos += xMove;
+				xPos = xPos >= xMax ? xPos - xMax : xPos;
+				yDiff = 1;
+			}
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return trees;
+}
+
+
+// Day 4
+int PassportChecker(string filename, bool checkCID, bool validate) {
+
+	ifstream file;
+	string line;
+	int fieldNum = 0;
+	int checkSum = 0;
+	int dataEnd;
+
+	string data[12][2];
+
+	int validIDCount = 0;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (line.empty()) {
+				if (checkSum == 36 || (checkSum == 35 && !checkCID)) validIDCount++;
+				checkSum = 0;
+				fieldNum = 0;
+			}
+			while (!line.empty()) {
+				data[fieldNum][0] = line.substr(0, line.find_first_of(':'));
+				line = line.substr(line.find_first_of(':') + 1, string::npos);
+				dataEnd = line.find_first_of(' ');
+				data[fieldNum][1] = line.substr(0, dataEnd); // find_first_of will return end of line if no space found
+				if (dataEnd == line.npos) line.clear();
+				else line = line.substr(dataEnd + 1, string::npos);
+
+				checkSum += getFieldCheck(data[fieldNum][0], data[fieldNum][1], validate);
+
+				//cout << data[fieldNum][0] << ":" << data[fieldNum][1] << "  " << checkSum << "\n";
+				fieldNum++;
+			}
+		}
+		if (checkSum == 36 || (checkSum == 35 && !checkCID)) validIDCount++;
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return validIDCount;
+}
+
+int getFieldCheck(string field, string data, bool validate) {
+	
+	if (!field.compare("cid")) return 1;
+	if (!field.compare("byr")) return (!validate || checkBYR(data)) ? 2 : 0;
+	if (!field.compare("iyr")) return (!validate || checkIYR(data)) ? 3 : 0;
+	if (!field.compare("eyr")) return (!validate || checkEYR(data)) ? 4 : 0;
+	if (!field.compare("hgt")) return (!validate || checkHGT(data)) ? 5 : 0;
+	if (!field.compare("hcl")) return (!validate || checkHCL(data)) ? 6 : 0;
+	if (!field.compare("ecl")) return (!validate || checkECL(data)) ? 7 : 0;
+	if (!field.compare("pid")) return (!validate || checkPID(data)) ? 8 : 0;;
+	return 0;
+
+}
+
+bool checkBYR(string data) {
+	return stoi(data) >= 1920 && stoi(data) <= 2002;
+}
+
+bool checkIYR(string data) {
+	return stoi(data) >= 2010 && stoi(data) <= 2020;
+}
+
+bool checkEYR(string data) {
+	return stoi(data) >= 2020 && stoi(data) <= 2030;
+}
+
+bool checkHGT(string data) {
+	if (data.find("cm") < data.npos) {
+		data.pop_back();
+		data.pop_back();
+		return stoi(data) >= 150 && stoi(data) <= 193;
+	}
+	if (data.find("in") < data.npos) {
+		data.pop_back();
+		data.pop_back();
+		return stoi(data) >= 59 && stoi(data) <= 76;
+	}
+	return false;
+}
+
+bool checkHCL(string data) {
+	return regex_match(data, regex("#[a-f0-9]{6}"));
+}
+
+bool checkECL(string data) {
+	return string("amb,blu,brn,gry,grn,hzl,oth").find(data) < string::npos;
+}
+
+bool checkPID(string data) {
+	return regex_match(data, regex("[0-9]{9}"));
 }
