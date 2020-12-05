@@ -1,3 +1,4 @@
 ﻿  Source.cpp
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(185,22): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(199,22): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(460,20): warning C4018: '<': signed/unsigned mismatch
   AOC2020.vcxproj -> D:\Documents\GitHub\AOC2020\AOC2020\Debug\AOC2020.exe

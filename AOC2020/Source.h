@@ -8,6 +8,7 @@
 #include <sstream>
 #include <ctime>
 #include <regex>
+#include <math.h>
 
 using namespace std;
 
@@ -51,3 +52,12 @@ bool checkHCL(string data);
 bool checkECL(string data);
 
 bool checkPID(string data);
+
+
+int getHighestSeatID(string filename);
+
+int findSeatID(string filename);
+
+int binaryPartition(string s, char high, char low);
+
+int getSeatID(int r, int c);

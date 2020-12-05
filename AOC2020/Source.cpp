@@ -66,6 +66,20 @@ int main()
 		duration = (clock() - start);
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 5:
+		start = clock();
+		ans = getHighestSeatID(filename);
+		duration = (clock() - start);
+		cout << "The highest seat ID is: " << ans << "\n";		
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+
+		ans = findSeatID(filename);
+		duration = (clock() - start);
+		cout << "Your seat ID is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -370,4 +384,87 @@ bool checkECL(string data) {
 
 bool checkPID(string data) {
 	return regex_match(data, regex("[0-9]{9}"));
+}
+
+// Day 5
+int getHighestSeatID(string filename) {
+
+	int tempID;
+	int highID = 0;
+	int r;
+	int c;
+
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			r = binaryPartition(line.substr(0, 7), 'B', 'F');
+			c = binaryPartition(line.substr(7, 3), 'R', 'L');
+			tempID = getSeatID(r, c);
+			highID = tempID > highID ? tempID : highID;
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return highID;
+
+}
+
+int findSeatID(string filename) {
+
+
+	int r;
+	int c;
+
+	bool Seats[128 * 8] = { false };
+	bool previousTaken = false;
+	bool previousPossible = false;
+
+
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			r = binaryPartition(line.substr(0, 7), 'B', 'F');
+			c = binaryPartition(line.substr(7, 3), 'R', 'L');
+			Seats[getSeatID(r, c)] = true;
+			
+		}
+		file.close();
+
+		for (int i = 0; i < 127 * 8; i++) {
+			if (previousPossible && Seats[i]) return i - 1;
+			previousPossible = previousTaken && !Seats[i];
+			previousTaken = Seats[i];		
+		}
+	}
+	else cout << "Error Reading";
+
+	return -1;
+}
+
+int binaryPartition(string s, char high, char low) {
+	int maxValue = int( pow(2, s.size()));
+	int change = maxValue / 4;
+	int ans = maxValue / 2;
+
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == high) ans += max(change, 1);
+		else ans -= change;
+		change /= 2;
+	}
+	return ans - 1;
+}
+
+int getSeatID(int r, int c) {
+	return r * 8 + c;
 }
