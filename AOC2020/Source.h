@@ -9,6 +9,9 @@
 #include <ctime>
 #include <regex>
 #include <math.h>
+#include <map>
+#include <list>
+#include <algorithm>
 
 using namespace std;
 
@@ -61,3 +64,20 @@ int findSeatID(string filename);
 int binaryPartition(string s, char high, char low);
 
 int getSeatID(int r, int c);
+
+
+int formAnswersSummation(string filename);
+
+int formAnswersSummationPt2(string filename);
+
+
+int bagShenanigans(string filename);
+
+int bagShenanigansPt2(string filename);
+
+struct bagContents {
+	map<string, int> contents;
+};
+
+int getBagCount(map<string, bagContents> ruleList, string bagName);
+

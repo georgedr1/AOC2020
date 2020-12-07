@@ -80,6 +80,33 @@ int main()
 		cout << "Finished in " << duration << " ms\n";
 
 		break;
+	case 6:
+		start = clock();
+		ans = formAnswersSummation(filename);
+		duration = (clock() - start);
+		cout << "The total yes count is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+
+		ans = formAnswersSummationPt2(filename);
+		duration = (clock() - start);
+		cout << "The other count is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
+	case 7:
+		start = clock();
+		ans = bagShenanigans(filename);
+		duration = (clock() - start);
+		cout << "The total bag count is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		start = clock();
+		ans = bagShenanigansPt2(filename);
+		duration = (clock() - start);
+		cout << "The total bag count is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -467,4 +494,220 @@ int binaryPartition(string s, char high, char low) {
 
 int getSeatID(int r, int c) {
 	return r * 8 + c;
+}
+
+// Day 6
+int formAnswersSummation(string filename) {
+
+	bool answersForGroup[26] = { false };
+	int groupSum = 0;
+	int totalSum = 0;
+	int index;
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (line.empty()) {
+				totalSum += groupSum;
+				groupSum = 0;
+				fill(answersForGroup, answersForGroup + 26, false);
+			}
+			while (!line.empty()) {
+				while (!line.empty()) {
+					index = line.back() - 97;
+					if (!answersForGroup[index]) groupSum++;
+					answersForGroup[index] = true;
+					line.pop_back();
+				}
+			}
+		}
+		totalSum += groupSum;
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return totalSum;
+}
+
+int formAnswersSummationPt2(string filename) {
+
+	int answersForGroup[26] = { 0 };
+	int groupCount = 0;
+	int numberOfGroups = 0;
+	int totalSum = 0;
+	bool firstPerson = true;
+	int index;
+	ifstream file;
+	string line;
+
+	
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (line.empty()) {
+				numberOfGroups++;
+				for (int i = 0; i <= 26; i++) {
+					totalSum += (answersForGroup[i] == groupCount) ? 1 : 0;
+				}
+				groupCount = -1;
+				fill(answersForGroup, answersForGroup + 26, 0);
+			}
+			while (!line.empty()) {
+				index = line.back() - 97;
+				if(answersForGroup[index] == groupCount) answersForGroup[index] = answersForGroup[index] + 1;
+				line.pop_back();
+			}
+			groupCount++;
+		}
+		for (int i = 0; i <= 26; i++) {
+			totalSum += (answersForGroup[i]) == groupCount ? 1 : 0;
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return totalSum;
+}
+
+
+// Day 7
+int bagShenanigans(string filename) {
+
+	map<string, bagContents> ruleList;
+	string outerBag;
+	string innerBag;
+	int innerCount = 0;
+	int bagsPosn;
+	int containPosn;
+	int commaPosn;
+
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			bagsPosn = line.find("bags");
+			outerBag = line.substr(0, bagsPosn - 1);
+			containPosn = line.find("contain");
+			line = line.substr(containPosn + 8, line.npos);
+			bagContents temp;
+			while (!line.empty()) {
+				if (line.find("no other") != line.npos) {
+					temp.contents.insert(pair<string, int>("null", 0));
+					line.clear();
+				}
+				else {
+					bagsPosn = line.find("bag");
+					commaPosn = line.find(",");
+					innerBag = line.substr(2, bagsPosn - 3);
+					innerCount = line.at(0) - 48;
+					if (commaPosn > 0) line = line.substr(commaPosn + 2, line.npos);
+					else line.clear();
+					temp.contents.insert(pair<string, int>(innerBag, innerCount));
+				}
+			}
+			ruleList.insert(pair<string, bagContents>(outerBag, temp));
+
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	string bagName;
+	list<string> goodBags;
+	goodBags.push_back("shiny gold");
+	bool newGoodBags = true;
+	bool alreadyFound;
+	bool canHoldTarget;
+
+	while (newGoodBags) {
+		newGoodBags = false;
+		for (std::map<string, bagContents>::iterator it = ruleList.begin(); it != ruleList.end(); ++it) {
+			outerBag = it->first;
+			for (std::map<string, int>::iterator it2 = it->second.contents.begin(); it2 != it->second.contents.end(); ++it2) {
+				innerBag = it2->first;
+				alreadyFound = find(goodBags.begin(), goodBags.end(), outerBag) != goodBags.end();
+				canHoldTarget = find(goodBags.begin(), goodBags.end(), innerBag) != goodBags.end();
+				if (canHoldTarget && !alreadyFound) {
+					goodBags.push_back(outerBag);
+					newGoodBags = true;
+				}
+			}
+		}
+	}
+
+	return goodBags.size() - 1;
+}
+
+int bagShenanigansPt2(string filename) {
+
+	map<string, bagContents> ruleList;
+	string outerBag;
+	string innerBag;
+	int innerCount = 0;
+	int bagsPosn;
+	int containPosn;
+	int commaPosn;
+
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			bagsPosn = line.find("bags");
+			outerBag = line.substr(0, bagsPosn - 1);
+			containPosn = line.find("contain");
+			line = line.substr(containPosn + 8, line.npos);
+			bagContents temp;
+			while (!line.empty()) {
+				if (line.find("no other") != line.npos) {
+					temp.contents.insert(pair<string, int>("null", 0));
+					line.clear();
+				}
+				else {
+					bagsPosn = line.find("bag");
+					commaPosn = line.find(",");
+					innerBag = line.substr(2, bagsPosn - 3);
+					innerCount = line.at(0) - 48;
+					if (commaPosn > 0) line = line.substr(commaPosn + 2, line.npos);
+					else line.clear();
+					temp.contents.insert(pair<string, int>(innerBag, innerCount));
+				}
+			}
+			ruleList.insert(pair<string, bagContents>(outerBag, temp));
+
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+
+	return getBagCount(ruleList, "shiny gold") - 1;
+}
+
+
+int getBagCount(map<string, bagContents> ruleList, string bagName) {
+	bagContents contents = ruleList[bagName];
+	int ans = 0;
+
+	for (std::map<string, int>::iterator it = contents.contents.begin(); it != contents.contents.end(); ++it) {
+		ans += it->second * getBagCount(ruleList, it->first);
+	}
+
+
+	return 1+ ans;
+
 }
