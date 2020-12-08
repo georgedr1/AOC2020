@@ -107,6 +107,18 @@ int main()
 		cout << "Finished in " << duration << " ms\n";
 		start = clock();
 		break;
+	case 8:
+		start = clock();
+		ans = findInfiniteInstruction(filename);
+		duration = (clock() - start);
+		cout << "The final acc is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = fixProgram(filename);
+		duration = (clock() - start);
+		cout << "The final acc is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -710,4 +722,239 @@ int getBagCount(map<string, bagContents> ruleList, string bagName) {
 
 	return 1+ ans;
 
+}
+
+
+// Day 8
+int findInfiniteInstruction(string filename) {
+
+	vector<Instruction> program;
+	Instruction temp;
+	string command;
+	int arg;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			command = line.substr(0, 3);
+			if (line.find('+') != line.npos) arg = stoi(line.substr(5));
+			else arg = -stoi(line.substr(5));
+			temp.arg = arg;
+			temp.command = command;
+			temp.executed = false;
+			program.push_back(temp);
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+
+	int acc = 0;
+	bool programStalled = false;
+	int at = 0;
+
+	// Run program
+	while (!program.at(at).executed) {
+		program.at(at).executed = true;
+		command = program.at(at).command;
+		arg = program.at(at).arg;
+
+		//cout << command << " " << arg << "\n";
+		if (command.find("acc") != command.npos) {
+			acc += arg;
+			at++;
+		}
+		else if (command.find("jmp") != command.npos) {
+			at += arg;
+		}
+		else {
+			at++;
+		}
+		
+	}
+
+
+	return acc;
+}
+
+int fixProgram(string filename) {
+
+	vector<Instruction> program;
+	Instruction temp;
+	string command;
+	int arg;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			command = line.substr(0, 3);
+			if (line.find('+') != line.npos) arg = stoi(line.substr(5));
+			else arg = -stoi(line.substr(5));
+			temp.arg = arg;
+			temp.command = command;
+			program.push_back(temp);
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+
+	int acc = 0;
+	bool programStalled = false;
+	int at = 0;
+	int lastAt = 0;
+
+	for (int i = 0; i < program.size(); i++) {
+		command = program.at(i).command;
+		if (command.find("jmp") != command.npos) {
+			program.at(i).command = "nop";
+			//cout << "\n\neditted program at: " << i << " \n";
+			//for (int j = 0; j < program.size(); j++) cout << program.at(j).command << " " << program.at(j).arg << "\n";
+			if (runProgram(program, &acc)) return acc;
+			program.at(i).command = "jmp";
+		}
+		else if (command.find("nop") != command.npos){
+			program.at(i).command = "jmp";
+			//cout << "\n\neditted program at: " << i << " \n";
+			//for (int j = 0; j < program.size(); j++) cout << program.at(j).command << " " << program.at(j).arg << "\n";
+			if (runProgram(program, &acc)) return acc;
+			program.at(i).command = "nop";
+		}
+	
+	}
+
+
+
+	//// Run program
+	////while (at<program.size()) {
+	////	program.at(at).lastAt = lastAt;
+	////	if (program.at(at).executed) {
+	////		at = backTrack(&program, at, &acc);
+	////		cout << "\n\neditted program at: " << at<<" \n";
+	////		for (int i = 0; i < program.size(); i++) cout << program.at(i).command << " " << program.at(i).arg << "\n";
+	////	}
+	////	program.at(at).executed = true;
+	////	command = program.at(at).command;
+	////	arg = program.at(at).arg;
+	////	cout << command << " " << arg << "\n";
+	////	if (command.find("acc") != command.npos) {
+	////		acc += arg;
+	////		lastAt = at;
+	////		at++;
+	////	}
+	////	else if (command.find("jmp") != command.npos) {
+	////		lastAt = at;
+	////		at += arg;
+	////	}
+	////	else {
+	////		lastAt = at;
+	////		at++;
+	////		
+	////	}
+	////}
+
+	
+
+
+	return acc;
+}
+
+int backTrack(vector<Instruction>* program, int at, int* acc) {
+
+	string command;
+	int arg;
+	bool flipped;
+	bool triedToFlip;
+	int lastAt;
+
+	for (int i = 0; i < (*program).size(); i++) {
+		if ((*program).at(i).flipped) {
+			if ((*program).at(i).command.find("jmp") != (*program).at(i).command.npos)(*program).at(i).command = "nop";
+			else (*program).at(i).command = "jmp";
+			(*program).at(i).flipped = false;
+			(*program).at(i).triedToFlip = true;
+		}
+	}
+
+	while (at >= 0 && at < (*program).size()) {
+
+		(*program).at(at).executed = false;
+		command = (*program).at(at).command;
+		arg = (*program).at(at).arg;
+		flipped = (*program).at(at).flipped;
+		triedToFlip = (*program).at(at).triedToFlip;
+		lastAt = (*program).at(at).lastAt;
+
+		if (command.find("acc") != command.npos) {
+			(*acc) -= arg;
+			at = lastAt;
+		}
+		else if (command.find("jmp") != command.npos) {
+			if (triedToFlip) at = lastAt;
+			else {
+				(*program).at(at).command = "nop";
+				(*program).at(at).flipped = true;
+				return at;
+			}
+		}
+		else {
+			if (triedToFlip) at = lastAt;
+			else {
+				(*program).at(at).command = "jmp";
+				(*program).at(at).flipped = true;
+				return at;
+			}
+		}
+
+	}
+	return -1;
+}
+
+// runs the program returns true if it completes
+bool runProgram(vector<Instruction> program, int *ans) {
+	vector<Instruction> prgm = program;
+
+	int acc = 0;
+	int at = 0;
+
+	string command;
+	int arg;
+
+	while (at < prgm.size()) {
+
+		if (prgm.at(at).executed) return false;
+
+		command = prgm.at(at).command;
+		arg = prgm.at(at).arg;
+		prgm.at(at).executed = true;
+
+		if (command.find("acc") != command.npos) {
+			acc += arg;
+			at++;
+		}
+		else if (command.find("jmp") != command.npos) {
+			at += arg;
+		}
+		else {
+			at++;
+		}
+
+	}
+
+	*ans = acc;
+	return true;
 }

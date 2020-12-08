@@ -81,3 +81,22 @@ struct bagContents {
 
 int getBagCount(map<string, bagContents> ruleList, string bagName);
 
+
+int findInfiniteInstruction(string filename);
+
+int fixProgram(string filename);
+
+struct Instruction {
+	Instruction() : executed(false),flipped(false),triedToFlip(false) {}
+	string command;
+	int arg;
+	bool executed;
+	bool flipped;
+	bool triedToFlip;
+	int lastAt;
+};
+
+int backTrack(vector<Instruction>* program, int at, int* acc);
+
+bool runProgram(vector<Instruction> program, int* ans);
+
