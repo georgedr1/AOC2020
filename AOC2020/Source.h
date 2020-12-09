@@ -100,3 +100,8 @@ int backTrack(vector<Instruction>* program, int at, int* acc);
 
 bool runProgram(vector<Instruction> program, int* ans);
 
+
+int findXMASFailure(string filename, int bufferSize);
+
+int findEncryptionWeakness(string filename, int bufferSize);
+

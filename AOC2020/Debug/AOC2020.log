@@ -1,8 +1,40 @@
 ﻿  Source.cpp
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(238,22): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(499,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(821,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(884,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(893,23): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(937,12): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(250,22): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(511,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(833,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(896,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(905,23): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(949,12): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1051,19): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1053,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=__int64
+          ]
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1054,32): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=__int64
+          ]
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1060,32): warning C4244: '-=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=__int64
+          ]
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1067,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=__int64
+          ]
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1068,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=__int64
+          ]
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1072,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+          with
+          [
+              _Ty=__int64
+          ]
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1021): warning C4715: 'findXMASFailure': not all control paths return a value
   AOC2020.vcxproj -> D:\Documents\GitHub\AOC2020\AOC2020\Debug\AOC2020.exe

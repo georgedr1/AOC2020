@@ -119,6 +119,18 @@ int main()
 		cout << "The final acc is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 9:
+		start = clock();
+		ans = findXMASFailure(filename, 25);
+		duration = (clock() - start);
+		cout << "The first erroneous number is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = findEncryptionWeakness(filename, 25);
+		duration = (clock() - start);
+		cout << "The weakness is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -957,4 +969,114 @@ bool runProgram(vector<Instruction> program, int *ans) {
 
 	*ans = acc;
 	return true;
+}
+
+
+// Day 9
+
+int findXMASFailure(string filename, int bufferSize) {
+	int* buffer;
+	buffer = new int[bufferSize];
+	int index = 0;
+	bool initialized = false;
+
+	int num;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (index >= bufferSize) index = 0;
+
+			num = stoi(line);
+
+			if (!initialized) {
+				buffer[index] = num;
+				if (index == bufferSize - 1) initialized = true;
+			}
+			else {
+				for (int i = 0; i < bufferSize - 1; i++) {
+					for (int j = i + 1; j < bufferSize; j++) {
+						//cout << buffer[i] << " + " << buffer[j] << " : " << num << "\n";
+						if (buffer[i] + buffer[j] == num) {
+							buffer[index] = num;
+						}
+					}
+				}
+			}
+
+			if (buffer[index] != num) return num;
+
+			index++;
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+}
+
+int findEncryptionWeakness(string filename, int bufferSize) {
+
+	int sum2find = findXMASFailure(filename, bufferSize);
+
+	vector<long long> numbers;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			numbers.push_back(stoll(line));
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	int sum = 0;
+	int num;
+	int firstIndex = 0;
+	int lastIndex = 0;
+	
+
+	while (lastIndex < numbers.size()) {
+		while (sum < sum2find) {
+			num = numbers.at(lastIndex);
+			sum += numbers.at(lastIndex);
+			
+			lastIndex++;
+		}
+		if (sum == sum2find) break;
+
+		sum -= numbers.at(firstIndex);
+
+		firstIndex++;
+	}
+
+	lastIndex--;
+
+	int min = numbers.at(firstIndex);
+	int max = numbers.at(firstIndex);
+
+	if (sum == sum2find) {
+		for (int i = firstIndex; i <= lastIndex; i++) {
+			num = numbers.at(i);
+			min = min < num ? min : num;
+			max = max > num ? max : num;
+		}
+
+		return min + max;
+	}
+
+	return -1;
+
 }
