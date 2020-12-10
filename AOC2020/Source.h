@@ -105,3 +105,8 @@ int findXMASFailure(string filename, int bufferSize);
 
 int findEncryptionWeakness(string filename, int bufferSize);
 
+int voltageAdaptors(string filename);
+
+long long voltageAdaptorsInfiniteCombinations(string filename);
+
+long long adaptorsRecursion(list<int> adaptors, map<int, long long>* solvedPortion);

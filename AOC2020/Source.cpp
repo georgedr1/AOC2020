@@ -10,7 +10,7 @@ int main()
 {
 	int day;
 
-	int ans;
+	long long ans;
 	double dans;
 	string filename;
 	cout << "What Day is it? ";
@@ -129,6 +129,18 @@ int main()
 		ans = findEncryptionWeakness(filename, 25);
 		duration = (clock() - start);
 		cout << "The weakness is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
+	case 10:
+		start = clock();
+		ans = voltageAdaptors(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = voltageAdaptorsInfiniteCombinations(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
 	default:
@@ -1079,4 +1091,106 @@ int findEncryptionWeakness(string filename, int bufferSize) {
 
 	return -1;
 
+}
+
+
+// Day 10
+int voltageAdaptors(string filename) {
+
+	list<int> adaptors;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			adaptors.push_back(stoi(line));
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	adaptors.sort();
+
+	int last = 0; // start with 0 jolts
+	int ones = 0;
+	int threes = 1; // always a 3 at the end
+
+	for (list<int>::iterator it = adaptors.begin(); it != adaptors.end(); ++it) {
+		
+		if (*it - last == 1) ones++;
+		else if (*it - last == 3) threes++;
+		last = *it;
+	}
+
+	return ones * threes;
+}
+
+
+long long voltageAdaptorsInfiniteCombinations(string filename) {
+
+	list<int> adaptors;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			adaptors.push_back(stoi(line));
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	adaptors.sort();
+
+	adaptors.push_front(0);
+	adaptors.push_back(adaptors.back() + 3);
+
+	map<int, long long> solvedPortion;
+	solvedPortion.insert(pair<int,int>(adaptors.back(), 1));
+
+	long long ans = adaptorsRecursion(adaptors, &solvedPortion);
+
+
+
+	
+	return ans;
+}
+
+long long adaptorsRecursion(list<int> adaptors, map<int, long long> *solvedPortion) {
+
+	map<int, long long> local = *solvedPortion;
+
+	int start = adaptors.front();
+
+	if (local.find(start) != local.end()) return local.at(start);
+
+	adaptors.pop_front();
+
+	if (adaptors.size() == 1) {
+		return 1;
+	}
+
+	long long ans = 0;
+
+	while (adaptors.front() - start <= 3) {
+		ans += adaptorsRecursion(adaptors, solvedPortion);
+		adaptors.pop_front();
+	}
+
+
+	solvedPortion->insert(pair<int, long long>(start, ans));
+		
+	return ans;
 }
