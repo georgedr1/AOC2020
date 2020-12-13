@@ -143,6 +143,42 @@ int main()
 		cout << "The value is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 11:
+		start = clock();
+		ans = gameOfSeats(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = gameOfSeatsPt2(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
+	case 12:
+		start = clock();
+		ans = manhattanDistance(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = waypointMovement(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
+	case 13:
+		start = clock();
+		ans = busDeparture(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = busDepartureSequence(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -1193,4 +1229,508 @@ long long adaptorsRecursion(list<int> adaptors, map<int, long long> *solvedPorti
 	solvedPortion->insert(pair<int, long long>(start, ans));
 		
 	return ans;
+}
+
+// Day 11
+int gameOfSeats(string filename) {
+
+	vector<vector<int>> seats; // 0 = floor, 1 = empty, 2 = taken;
+	vector<vector<int>> lastIterationSeats;
+	vector<int> tempRow;
+	int fillLocation = 0;
+	int stringLocation = 0;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			stringLocation = 0;
+			while (stringLocation<line.size()) {
+				tempRow.push_back(line.at(stringLocation)=='L' ? 1:0);
+				stringLocation++;
+				
+			}
+			seats.push_back(tempRow);
+			tempRow.clear();
+			fillLocation++;
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	int occupied = 0;
+	bool changeHappened = true;
+
+	while(changeHappened) {
+		changeHappened = false;
+		lastIterationSeats = seats;
+		occupied = 0;
+		for (int row = 0; row < fillLocation; row++) {
+			for (int col = 0; col < stringLocation; col++) {
+				if(seats[row][col] != 0) seats[row][col] = checkNeighbors(lastIterationSeats, row, col);
+				occupied += (seats[row][col] == 2);
+				changeHappened = changeHappened || seats[row][col] != lastIterationSeats[row][col];
+			}
+		}
+	}
+
+	return occupied;
+}
+int gameOfSeatsPt2(string filename) {
+
+	vector<vector<int>> seats; // 0 = floor, 1 = empty, 2 = taken;
+	vector<vector<int>> lastIterationSeats;
+	vector<int> tempRow;
+	int fillLocation = 0;
+	int stringLocation = 0;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			stringLocation = 0;
+			while (stringLocation < line.size()) {
+				tempRow.push_back(line.at(stringLocation) == 'L' ? 1 : 0);
+				stringLocation++;
+
+			}
+			seats.push_back(tempRow);
+			tempRow.clear();
+			fillLocation++;
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	int occupied = 0;
+	bool changeHappened = true;
+
+	while (changeHappened) {
+		changeHappened = false;
+		lastIterationSeats = seats;
+		occupied = 0;
+		for (int row = 0; row < fillLocation; row++) {
+			for (int col = 0; col < stringLocation; col++) {
+				if (seats[row][col] != 0) seats[row][col] = checkLineOfSight(lastIterationSeats, row, col);
+				occupied += (seats[row][col] == 2);
+				changeHappened = changeHappened || seats[row][col] != lastIterationSeats[row][col];
+			}
+		}
+	}
+
+	return occupied;
+}
+
+int checkNeighbors(vector<vector<int>> seats, int row, int col) {
+	int current = seats[row][col];
+	int ans = current == 2? -1 : 0;
+
+	for(int r = max(0,row-1);r <= min(int(seats.size()-1),row+1); r++) {
+		for (int c = max(0, col - 1); c <= min(int(seats[0].size() - 1), col + 1); c++) {
+			ans += (seats[r][c] == 2);
+		}
+	}
+
+	if ( current == 1 && ans == 0) return 2;
+	if (current == 2 && ans >= 4) return 1;
+	
+	return current;
+	 
+}
+
+
+int checkLineOfSight(vector<vector<int>> seats, int row, int col) {
+	int current = seats[row][col];
+	int ans = 0;
+	int r, c, cur;
+	bool noSeat;
+
+	int maxR = seats.size();
+	int maxC = seats[0].size();
+
+	// 0 degress (right)
+	r = row;
+	c = col + 1;
+	noSeat = true;
+	while (c < maxC && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) c++;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	// 45 degress (up right)
+	r = row - 1;
+	c = col + 1;
+	noSeat = true;
+	while (r >= 0 && c < maxC && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) r--, c++;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	// 90 degress (up)
+	r = row - 1;
+	c = col;
+	noSeat = true;
+	while (r >= 0 && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) r--;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	// 135 degress (up left)
+	r = row - 1;
+	c = col - 1;
+	noSeat = true;
+	while (r >= 0 && c >= 0 && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) r--, c--;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	// 180 degress (left)
+	r = row;
+	c = col - 1;
+	noSeat = true;
+	while (c >= 0 && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) c--;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	// 225 degress (down left)
+	r = row + 1;
+	c = col - 1;
+	noSeat = true;
+	while (r < maxR && c >= 0 && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) r++, c--;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	// 270 degress (down)
+	r = row+1;
+	c = col;
+	noSeat = true;
+	while (r < maxR && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) r++;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	// 315 degress (down right)
+	r = row + 1;
+	c = col + 1;
+	noSeat = true;
+	while (r < maxR && c < maxC && noSeat) {
+		cur = seats[r][c];
+		if (cur == 0) r++, c++;
+		else if (cur == 1) noSeat = false;
+		else ans++, noSeat = false;
+	}
+
+	if (current == 1 && ans == 0) return 2;
+	if (current == 2 && ans >= 5) return 1;
+
+	return current;
+
+}
+
+
+int manhattanDistance(string filename) {
+
+
+	int x = 0;
+	int y = 0;
+	int dir = 0;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (line[0] == 'N') {
+				y += stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'S') {
+				y -= stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'E') {
+				x += stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'W') {
+				x -= stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'L') {
+				dir += stoi(line.substr(1, line.npos));
+				dir = dir % 360;
+			}
+			else if (line[0] == 'R') {
+				dir -= stoi(line.substr(1, line.npos));
+				dir = (dir + 360) % 360;
+			}
+			else if (line[0] == 'F') {
+				switch (dir) {
+				case 0:
+					x += stoi(line.substr(1, line.npos));
+					break;
+				case 90:
+					y += stoi(line.substr(1, line.npos));
+					break;
+				case 180:
+					x -= stoi(line.substr(1, line.npos));
+					break;
+				case 270:
+					y -= stoi(line.substr(1, line.npos));
+					break;
+				default:
+					cout << "shouldn't get here\n";
+				}
+
+			}
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return abs(x) + abs(y);
+}
+
+int waypointMovement(string filename) {
+
+
+	int x = 0;
+	int y = 0;
+	int wx = 10;
+	int wy = 1;
+	int dir = 0;
+	int temp;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (line[0] == 'N') {
+				wy += stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'S') {
+				wy -= stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'E') {
+				wx += stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'W') {
+				wx -= stoi(line.substr(1, line.npos));
+			}
+			else if (line[0] == 'L') {
+				dir = stoi(line.substr(1, line.npos));
+				switch (dir%360) {
+				case 0:
+					break;
+				case 90:
+					temp = wx;
+					wx = - wy;
+					wy = temp;
+					break;
+				case 180:
+					wx = -wx;
+					wy = -wy;
+					break;
+				case 270:
+					temp = wx;
+					wx = wy;
+					wy = - temp;
+					break;
+				default:
+					cout << "shouldn't get here\n";
+			}
+			}
+			else if (line[0] == 'R') {
+				dir = stoi(line.substr(1, line.npos));
+				switch (dir % 360) {
+				case 0:
+					break;
+				case 90:
+					temp = wx;
+					wx = wy;
+					wy = -temp;
+					break;
+				case 180:
+					wx = -wx;
+					wy = -wy;
+					break;
+				case 270:
+					temp = wx;
+					wx = -wy;
+					wy = temp;
+					break;
+				default:
+					cout << "shouldn't get here\n";
+				}
+			}
+			else if (line[0] == 'F') {
+				dir = stoi(line.substr(1, line.npos));
+				x += wx * dir;
+				y += wy * dir;
+			}
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return abs(x) + abs(y);
+}
+
+int busDeparture(string filename) {
+
+	int startTime;
+	int waitTime;
+	int bestWait = INT_MAX;
+	int bestBus = 0;
+	int bus;
+	int a;
+	int b;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		getline(file, line);
+		startTime = stoi(line);
+
+		getline(file, line);
+		
+		while (!line.empty()) {
+			a = line.find_first_not_of("x,");
+			b = a + (line.substr(a,line.npos)).find_first_of(',');
+			bus = stoi(line.substr(a, b));
+			if (b != line.npos) line = line.substr(b + 1);
+			else line.clear();
+
+			waitTime = bus - startTime % bus;
+			
+			if (waitTime < bestWait) bestWait = waitTime, bestBus = bus;
+		}
+			
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return bestBus * bestWait;
+}
+
+long long busDepartureSequence(string filename) {
+
+	
+	vector<int> buses;
+	int a;
+	int b;
+	long long ans = 1;
+	string s;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		getline(file, line);
+		getline(file, line);
+
+		while (!line.empty()) {
+			a = line.find_first_not_of(",");
+			b = line.find_first_of(',');
+			s = line.substr(a, b);
+
+			if (s.at(0) != 'x') buses.push_back(stoi(s));
+			else buses.push_back(-1);
+
+			if (b != line.npos) line = line.substr(b + 1);
+			else line.clear();
+		}
+
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	bool good;
+	long long lastGood;
+	bool jumpset = false;
+	int progress = 0;
+	long long jump = buses[0];
+	long long index = buses[0];
+	while (true) {
+		good = true;
+		for (int i = 1; i < buses.size(); i++) {
+			if (buses[i] == -1 || (i + index) % buses[i] == 0) {
+				if (i > progress) {
+					progress = i;
+					lastGood = index;
+					jumpset = false;
+				}
+				else if (i == progress && !jumpset) {
+					jump = index - lastGood;
+					jumpset = true;
+				}
+
+			}
+			else {
+				good = false;
+				break;
+			}
+		}
+		if (good) return index;
+		index += jump;
+	}
+
+	return -1;
+}
+
+
+long long lcm(long long a, long long b) {
+	return (a / gcd(a, b)) * b;
+}
+
+long long gcd(long long a, long long b) {
+	if (b == 0)
+		return a;
+	return gcd(b, a % b);
 }

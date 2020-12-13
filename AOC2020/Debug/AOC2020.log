@@ -1,40 +1,43 @@
 ﻿  Source.cpp
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(262,22): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(523,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(845,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(908,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(917,23): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(961,12): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1063,19): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1065,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(298,22): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(559,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(881,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(944,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(953,23): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(997,12): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1099,19): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1101,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1066,32): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1102,32): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1072,32): warning C4244: '-=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1108,32): warning C4244: '-=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1079,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1115,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1080,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1116,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1084,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1120,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1033): warning C4715: 'findXMASFailure': not all control paths return a value
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1254,25): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1304,26): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1702,21): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1069): warning C4715: 'findXMASFailure': not all control paths return a value
   AOC2020.vcxproj -> D:\Documents\GitHub\AOC2020\AOC2020\Debug\AOC2020.exe

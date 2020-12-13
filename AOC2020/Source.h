@@ -12,6 +12,7 @@
 #include <map>
 #include <list>
 #include <algorithm>
+#include <numeric>
 
 using namespace std;
 
@@ -110,3 +111,25 @@ int voltageAdaptors(string filename);
 long long voltageAdaptorsInfiniteCombinations(string filename);
 
 long long adaptorsRecursion(list<int> adaptors, map<int, long long>* solvedPortion);
+
+
+int gameOfSeats(string filename);
+
+int gameOfSeatsPt2(string filename);
+
+int checkNeighbors(vector<vector<int>> seats, int row, int col);
+
+int checkLineOfSight(vector<vector<int>> seats, int row, int col);
+
+
+int manhattanDistance(string filename);
+
+int waypointMovement(string filename);
+
+int busDeparture(string filename);
+
+long long busDepartureSequence(string filename);
+
+long long lcm(long long a, long long b);
+
+long long gcd(long long a, long long b);
