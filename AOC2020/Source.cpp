@@ -179,6 +179,18 @@ int main()
 		cout << "The value is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 14:
+		start = clock();
+		ans = maskedProgram(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = maskedProgramV2(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -1733,4 +1745,165 @@ long long gcd(long long a, long long b) {
 	if (b == 0)
 		return a;
 	return gcd(b, a % b);
+}
+
+
+long long maskedProgram(string filename) {
+	map<long long, long long> mem;
+	bool *current;
+	int mask[36];
+	long long index;
+	int length;
+	long long sum = 0;
+
+	ifstream file;
+	string line;
+
+
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (line.find("mask")!=line.npos) {
+				length = line.size();
+				for (int i = 0; i < length - 7; i++) {
+					mask[i] = line[length - 1 - i] - 48;
+				}
+			}
+			else {
+				index = stoll(line.substr(4, line.find_first_of(']')));
+				current = toBitArray(stoll(line.substr(line.find_last_of(' '))));
+				current = applyMask(current, mask);
+				if (mem.find(index) == mem.end()) {
+					mem.insert(pair<long long, long long>(index, toULLong(current)));
+					sum += mem.at(index);
+				}
+				else {
+					sum -= mem.at(index);
+					mem.at(index) = toULLong(current);
+					sum += mem.at(index);
+				}
+
+			}
+		}
+
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return sum;
+}
+
+long long toULLong(bool* input){
+	long long output = 0;
+
+	
+	for (int i = 0; i < 36; i++) {
+		output += input[i] * powl(2, i);
+	}
+	return output;
+}
+
+bool* toBitArray(long long input) {
+	static bool output[36];
+	for (int i = 0; i < 36; i++) {
+		output[i] = (input & (1 << i)) >> i;
+	}
+	return output;
+}
+
+bool* applyMask(bool* input, int* mask) {
+	for (int i = 0; i < 36; i++) {
+		if (mask[i] != 40) input[i] = mask[i];
+		
+	}
+	return input;
+}
+
+long long maskedProgramV2(string filename) {
+	map<long long, long long> mem;
+	long long current;
+	int mask[36];
+	long long baseIndex;
+	long long index;
+	int length;
+	long long sum = 0;
+	vector<long long> indices;
+
+	ifstream file;
+	string line;
+
+
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			if (line.find("mask") != line.npos) {
+				length = line.size();
+				for (int i = 0; i < length - 7; i++) {
+					mask[i] = line[length - 1 - i] - 48;
+				}
+			}
+			else {
+				baseIndex = stoll(line.substr(4, line.find_first_of(']')));
+				indices = applyMaskV2(baseIndex, mask);
+				for (long long i = 0; i < indices.size(); i++) {
+					index = indices[i];
+					current = stoll(line.substr(line.find_last_of(' ')));
+					if (mem.find(index) == mem.end()) {
+						mem.insert(pair<long long, long long>(index,current));
+						sum += mem[index];
+					}
+					else {
+						sum -= mem[index];
+						mem.at(index) = current;
+						sum += mem[index];
+					}
+				}
+
+			}
+		}
+
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return sum;
+}
+
+vector<long long> applyMaskV2(long long base, int* mask) {
+	vector<long long> returner;
+	int startSize;
+	bool* memory = toBitArray(base);
+	
+	returner.push_back(0);
+
+	for (int i = 0; i < 36; i++) {
+		switch (mask[i]) {
+		case 0:
+			for (int k = 0; k < returner.size(); k++) {
+				returner[k] += memory[i] * (long long)pow(2, i);
+			}
+			break;
+		case 1:
+			for (int k = 0; k < returner.size(); k++) {
+				returner[k] += (long long)pow(2, i);
+			}
+			break;
+		case 40:
+			startSize = returner.size();
+			for (int k = 0; k < startSize; k++) {
+				returner.push_back(returner[k] + (long long) pow(2, i));
+			}
+			break;
+		}
+	}
+
+
+	return returner;
+	
 }

@@ -1,43 +1,48 @@
 ﻿  Source.cpp
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(298,22): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(559,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(881,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(944,20): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(953,23): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(997,12): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1099,19): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1101,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(310,22): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(571,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(893,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(956,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(965,23): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1009,12): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1111,19): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1113,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1102,32): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1114,32): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1108,32): warning C4244: '-=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1120,32): warning C4244: '-=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1115,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1127,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1116,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1128,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1120,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1132,20): warning C4244: '=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=__int64
           ]
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1254,25): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1304,26): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1702,21): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1069): warning C4715: 'findXMASFailure': not all control paths return a value
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1266,25): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1316,26): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1714,21): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1804,34): warning C4244: '+=': conversion from 'long double' to '__int64', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1812,32): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1855,22): warning C4244: 'argument': conversion from '__int64' to 'const unsigned int', possible loss of data
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1888,22): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1893,22): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\AOC2020\AOC2020\Source.cpp(1081): warning C4715: 'findXMASFailure': not all control paths return a value
   AOC2020.vcxproj -> D:\Documents\GitHub\AOC2020\AOC2020\Debug\AOC2020.exe

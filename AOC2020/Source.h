@@ -133,3 +133,16 @@ long long busDepartureSequence(string filename);
 long long lcm(long long a, long long b);
 
 long long gcd(long long a, long long b);
+
+
+long long maskedProgram(string filename);
+
+long long toULLong(bool* input);
+
+bool* toBitArray(long long input);
+
+bool* applyMask(bool* input, int* mask);
+
+
+vector<long long> applyMaskV2(long long base, int* mask);
+long long maskedProgramV2(string filename);
