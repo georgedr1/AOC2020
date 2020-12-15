@@ -146,3 +146,6 @@ bool* applyMask(bool* input, int* mask);
 
 vector<long long> applyMaskV2(long long base, int* mask);
 long long maskedProgramV2(string filename);
+
+
+int memory(string filename, int numToFind);

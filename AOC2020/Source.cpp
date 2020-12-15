@@ -191,6 +191,18 @@ int main()
 		cout << "The value is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 15:
+		start = clock();
+		ans = memory(filename, 2020);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = memory(filename, 30000000);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -1906,4 +1918,64 @@ vector<long long> applyMaskV2(long long base, int* mask) {
 
 	return returner;
 	
+}
+
+
+int memory(string filename, int numToFind) {
+
+
+	map<int,pair<int,int>> numbers;
+	int turn = 1;
+	pair<int, int> last;
+	int comma;
+	int speak;
+
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			while (!line.empty()) {
+				comma = line.find_first_of(',');
+				speak = stoi(line.substr(0,comma));
+				if (comma != line.npos) line = line.substr(comma + 1, line.npos);
+				else line.clear();
+				numbers.insert(pair<int, pair<int, int>>(speak, pair<int, int>(turn, -1)));
+
+				//cout << "the " << turn << " word spoken is: " << speak << "\n";
+				turn++;
+			}
+		}
+		last = numbers.at(speak);
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	
+	std::pair<std::map<int, pair<int, int>>::iterator, bool> ret;
+
+	int x = 3;
+	
+	while (turn <= numToFind) {
+		
+		if (last.second == -1) speak = 0;
+		else speak = last.first - last.second;
+		ret = numbers.insert(pair<int, pair<int, int>> (speak, pair<int,int> (turn,-1)));
+		if (!ret.second) {
+			numbers.at(speak) = pair<int, int>(turn, numbers.at(speak).first);
+		}
+
+		/*if (turn / pow(10, x) == 1) {
+			x++;
+			cout << "the " << turn << " word spoken is: " << speak << "\n";
+		}*/
+		last = numbers.at(speak);
+		turn++;
+		
+	}
+
+	return speak;
 }
