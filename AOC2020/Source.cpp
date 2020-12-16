@@ -203,6 +203,18 @@ int main()
 		cout << "The value is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 16:
+		start = clock();
+		ans = basicValidTickets(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = funTicketData(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -1924,7 +1936,7 @@ vector<long long> applyMaskV2(long long base, int* mask) {
 int memory(string filename, int numToFind) {
 
 
-	map<int,pair<int,int>> numbers;
+	unordered_map<int,pair<int,int>> numbers;
 	int turn = 1;
 	pair<int, int> last;
 	int comma;
@@ -1955,7 +1967,7 @@ int memory(string filename, int numToFind) {
 	else cout << "Error Reading";
 
 	
-	std::pair<std::map<int, pair<int, int>>::iterator, bool> ret;
+	std::pair<std::unordered_map<int, pair<int, int>>::iterator, bool> ret;
 
 	int x = 3;
 	
@@ -1963,19 +1975,257 @@ int memory(string filename, int numToFind) {
 		
 		if (last.second == -1) speak = 0;
 		else speak = last.first - last.second;
-		ret = numbers.insert(pair<int, pair<int, int>> (speak, pair<int,int> (turn,-1)));
+		ret = numbers.insert({ speak, {turn,-1} });
 		if (!ret.second) {
-			numbers.at(speak) = pair<int, int>(turn, numbers.at(speak).first);
+			numbers[speak] = { turn, numbers[speak].first };
 		}
-
+		last = numbers[speak];
+		turn++;
 		/*if (turn / pow(10, x) == 1) {
 			x++;
 			cout << "the " << turn << " word spoken is: " << speak << "\n";
 		}*/
-		last = numbers.at(speak);
-		turn++;
-		
 	}
 
 	return speak;
+}
+
+
+int basicValidTickets(string filename) {
+
+	vector < pair< pair<int, int>, pair<int, int> > > rules;
+
+
+
+	int firstLow, firstHigh, secondLow, secondHigh;
+
+	int badValSum = 0;
+
+	int num2Check, comma;
+
+	bool rulesComplete = false;
+	int firstNum;
+	int dash;
+	int lastNumEnd;
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line) && !rulesComplete) {
+			if (line.size() < 5) {
+				rulesComplete = true;
+				break;
+			}
+			firstNum = line.find_first_of("0123456789");
+			dash = line.find_first_of('-', firstNum);
+			lastNumEnd = line.find_first_of(' ', dash);
+
+			firstLow = stoi(line.substr(firstNum, dash - 1));
+			firstHigh = stoi(line.substr(dash + 1, lastNumEnd - 1));
+
+			firstNum = line.find_first_of("0123456789", lastNumEnd);
+			dash = line.find_first_of('-',firstNum);
+			
+			secondLow = stoi(line.substr(firstNum, dash - 1));
+			secondHigh = stoi(line.substr(dash + 1, line.npos));
+
+			rules.push_back({ {firstLow,firstHigh}, {secondLow,secondHigh} });
+			//cout << line << "\n";
+		}
+		getline(file, line);
+		getline(file, line);
+		// part 2 probs
+
+		getline(file, line);
+		getline(file, line);
+		//cout << line << "\n";
+
+		while (getline(file, line)) {
+			//cout << line << "\n";
+			while (!line.empty()) {
+				comma = line.find_first_of(',');
+				num2Check = stoi(line.substr(0, comma));
+				//cout << num2Check << " ";
+				badValSum += checkValue(num2Check, rules);
+
+				if (comma == -1) line.clear();
+				else line = line.substr(comma+1);
+
+			}
+			//cout << "\n";
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return badValSum;
+}
+
+
+int checkValue(int num2Check, vector < pair< pair<int, int>, pair<int, int> > > rules) {
+
+
+	for (int i = 0; i < rules.size(); i++) {
+		if ((rules[i].first.first <= num2Check && num2Check <= rules[i].first.second) || (rules[i].second.first <= num2Check && num2Check <= rules[i].second.second)) return 0;
+	}
+
+	return num2Check;
+}
+
+long long funTicketData(string filename) {
+
+	vector < pair< pair<int, int>, pair<int, int> > > rules;
+	vector<int> departureRules(6);
+	vector<int> ticket;
+	vector<vector<int>> validTickets;
+
+
+	int firstLow, firstHigh, secondLow, secondHigh;
+
+	int lineNum = 0;
+
+	vector<int> myTicket;
+
+	int badValSum = 0;
+
+	int num2Check, comma;
+
+	bool rulesComplete = false;
+	int firstNum;
+	int dash;
+	int lastNumEnd;
+	ifstream file;
+	string line;
+
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line) && !rulesComplete) {
+			if (line.size() < 5) {
+				rulesComplete = true;
+				break;
+			}
+			firstNum = line.find_first_of("0123456789");
+			dash = line.find_first_of('-', firstNum);
+			lastNumEnd = line.find_first_of(' ', dash);
+
+			firstLow = stoi(line.substr(firstNum, dash - 1));
+			firstHigh = stoi(line.substr(dash + 1, lastNumEnd - 1));
+
+			firstNum = line.find_first_of("0123456789", lastNumEnd);
+			dash = line.find_first_of('-', firstNum);
+
+			secondLow = stoi(line.substr(firstNum, dash - 1));
+			secondHigh = stoi(line.substr(dash + 1, line.npos));
+
+			rules.push_back({ {firstLow,firstHigh}, {secondLow,secondHigh} });
+
+			if (line.find("departure") != line.npos) departureRules.push_back(lineNum);
+
+			lineNum++;
+			//cout << line << "\n";
+		}
+		getline(file, line); // your ticket:
+
+		getline(file, line);
+		while (!line.empty()) {
+			comma = line.find_first_of(',');
+			myTicket.push_back(stoi(line.substr(0, comma)));
+			
+			if (comma == -1) line.clear();
+			else line = line.substr(comma + 1);
+		}
+		validTickets.push_back(myTicket);
+		getline(file, line); // blank
+		getline(file, line); // nearby tickets:
+
+		bool validTicket;
+
+		while (getline(file, line)) {
+			validTicket = true;
+			//cout << line << "\n";
+			ticket.clear();
+			while (!line.empty()) {
+				comma = line.find_first_of(',');
+				num2Check = stoi(line.substr(0, comma));
+				//cout << num2Check << " ";
+				if (checkValue(num2Check, rules) != 0) {
+					validTicket = false;
+					break;
+				}
+				ticket.push_back(num2Check);
+
+				if (comma == -1) line.clear();
+				else line = line.substr(comma + 1);
+
+			}
+			if (validTicket) validTickets.push_back(ticket);
+			//cout << "\n";
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+	vector<int> ticketOrder(rules.size(),-1);
+	vector<bool> c(rules.size(), true);
+	vector<vector<bool>> possible(rules.size(),c);
+
+	for (int i = 0; i < rules.size(); i++) { // 
+		for (int k = 0; k < validTickets.size(); k++) {
+
+			for (int j = 0; j < rules.size(); j++) {
+				num2Check = validTickets[k][j];
+				
+				if ((rules[i].first.first <= num2Check && num2Check <= rules[i].first.second) || (rules[i].second.first <= num2Check && num2Check <= rules[i].second.second)) {
+					//cout << num2Check << " : " << rules[i].first.first << "-" << rules[i].first.second << " or " << rules[i].second.first << "-" << rules[i].second.second << "\n";
+				}
+				else {
+					possible[i][j] = false;
+				}
+
+			}
+		}
+	}
+
+	int numPossible;
+	vector<int> possibilities(rules.size());
+
+	for (int i = 0; i < rules.size(); i++) {
+		numPossible = 0;
+		for (int j = 0; j < rules.size(); j++) {
+			if (possible[i][j]) numPossible++;
+		}
+		possibilities[i] = numPossible;
+	}
+
+	int numPossibleToConsider = 1;
+	vector<bool> assigned(rules.size(), false);
+	while (numPossibleToConsider <= rules.size()) {
+		for (int i = 0; i < rules.size(); i++) {
+			if (possibilities[i] == numPossibleToConsider) {
+				for (int m = 0; m < rules.size(); m++) {
+					if (possible[i][m] && !assigned[m]) {
+						ticketOrder[i] = m; // ith rule is mth on ticket
+						assigned[m] = true;
+					}
+				}
+			}
+		}
+
+		numPossibleToConsider++;
+
+	}
+
+
+	long long ret = 1;
+
+	for (int i = 0; i < 6; i++) {
+		ret *= myTicket[ticketOrder[i]];
+	}
+
+
+	return ret;
 }

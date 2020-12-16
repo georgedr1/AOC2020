@@ -13,6 +13,7 @@
 #include <list>
 #include <algorithm>
 #include <numeric>
+#include <unordered_map>
 
 using namespace std;
 
@@ -149,3 +150,10 @@ long long maskedProgramV2(string filename);
 
 
 int memory(string filename, int numToFind);
+
+
+int basicValidTickets(string filename);
+
+long long funTicketData(string filename);
+
+int checkValue(int num2Check, vector < pair< pair<int, int>, pair<int, int> > > rules);
