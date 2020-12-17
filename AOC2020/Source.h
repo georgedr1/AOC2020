@@ -157,3 +157,12 @@ int basicValidTickets(string filename);
 long long funTicketData(string filename);
 
 int checkValue(int num2Check, vector < pair< pair<int, int>, pair<int, int> > > rules);
+
+
+int conwayCubes(string filename, int iterations);
+
+bool check3DNeighbors(vector<vector<vector<bool>>> cubes, int x, int y, int z, int xSize, int ySize, int zSize);
+
+int conwayHyperCubes(string filename, int iterations);
+
+bool check4DNeighbors(vector<vector<vector<vector<bool>>>> hypercubes, int x, int y, int z, int w, int xSize, int ySize, int zSize, int wSize);

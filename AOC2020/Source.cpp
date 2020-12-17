@@ -215,6 +215,18 @@ int main()
 		cout << "The value is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 17:
+		start = clock();
+		ans = conwayCubes(filename,6);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = conwayHyperCubes(filename, 6);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -2228,4 +2240,175 @@ long long funTicketData(string filename) {
 
 
 	return ret;
+}
+
+
+
+int conwayCubes(string filename, int iterations) {
+
+	vector<vector<vector<bool>>> cubes(21,vector<vector<bool>> (21, vector<bool>(21, false))), last;
+	int x =0, y=0, z=0;
+	int xSize = 0, ySize = 0, zSize = 0;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			x = 0;
+			while (x < line.size()) {
+				cubes[x][y][z] = line[x] == '#';
+				x++;
+			}
+			y++;
+		}
+		xSize = x;
+		ySize = y;
+		zSize = 1;
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	int iter = 0;
+	int active;
+
+	while (iter < iterations) {
+		//cout << "After " << iter+1 << " cycles:\n\n";
+		active = 0;
+		last = cubes;
+		xSize += 2;
+		ySize += 2;
+		zSize += 2;
+		for (z = 0; z < zSize; z++) {
+			//cout << "z=" << z << "\n";
+			for (y = 0; y < ySize; y++) {
+				for (x = 0; x < xSize; x++) {
+					cubes[x][y][z] = check3DNeighbors(last, x, y, z, xSize, ySize, zSize);
+					active += cubes[x][y][z];
+					//cout << cubes[x][y][z];
+				}
+				//cout << "\n";
+			}
+			//cout << "\n";
+		}
+		//cout << "\n";
+		iter++;
+	}
+
+	return active;
+}
+
+bool check3DNeighbors(vector<vector<vector<bool>>> cubes, int x, int y, int z, int xSize, int ySize, int zSize) {
+	bool current;
+	if (x*y*z == 0 || x == xSize || y == ySize || z == zSize) current = false;
+	else current = cubes[x-1][y-1][z-1];
+	int ans = current ? -1 : 0;
+	//cout << ans;
+	for (int r = max(0,x-2); r <= min(xSize - 3, x); r++) {
+		for (int c = max(0, y - 2); c <= min(ySize - 3, y); c++) {
+			for (int h = max(0, z - 2); h <= min(zSize - 3, z); h++) {
+				ans += cubes[r][c][h];
+				//cout << "{" << r << "," << c << "," << h << "}\n";
+			}
+		}
+	}
+	//cout << ans;
+	if (current && (ans == 2 || ans == 3)) return true;
+	if (!current && ans == 3) return true;
+
+	return false;
+
+}
+
+int conwayHyperCubes(string filename, int iterations) {
+
+	vector<vector<vector<vector<bool>>>> hypercubes(21, vector < vector<vector<bool>>>(21, vector < vector<bool>>(21, vector<bool>(21, false)))), last;
+	int x = 0, y = 0, z = 0, w = 0;
+	int xSize, ySize, zSize, wSize;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			x = 0;
+			while (x < line.size()) {
+				hypercubes[x][y][z][w] = line[x] == '#';
+				x++;
+			}
+			y++;
+		}
+		xSize = x;
+		ySize = y;
+		zSize = 1;
+		wSize = 1;
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	int iter = 0;
+	int active;
+
+	while (iter < iterations) {
+		//cout << "After " << iter+1 << " cycles:\n\n";
+		active = 0;
+		last = hypercubes;
+		xSize += 2;
+		ySize += 2;
+		zSize += 2;
+		wSize += 2;
+		for (w = 0; w < wSize; w++) {
+			for (z = 0; z < zSize; z++) {
+				//cout << "z=" << z << "\n";
+				for (y = 0; y < ySize; y++) {
+					for (x = 0; x < xSize; x++) {
+						hypercubes[x][y][z][w] = check4DNeighbors(last, x, y, z, w, xSize, ySize, zSize, wSize);
+						active += hypercubes[x][y][z][w];
+						//cout << cubes[x][y][z][w];
+					}
+					//cout << "\n";
+				}
+				//cout << "\n";
+			}
+			//cout << "\n";
+		}
+		iter++;
+		cout << "Iteration: " << iter << "\n";
+	}
+
+	return active;
+}
+
+bool check4DNeighbors(vector<vector<vector<vector<bool>>>> hypercubes, int x, int y, int z, int w, int xSize, int ySize, int zSize, int wSize) {
+	bool current;
+	if (x * y * z * w == 0 || x == xSize || y == ySize || z == zSize || w == wSize) current = false;
+	else current = hypercubes[x - 1][y - 1][z - 1][w - 1];
+	int ans = current ? -1 : 0;
+	//cout << ans;
+	for (int r = max(0, x - 2); r <= min(xSize - 3, x); r++) {
+		for (int c = max(0, y - 2); c <= min(ySize - 3, y); c++) {
+			for (int h = max(0, z - 2); h <= min(zSize - 3, z); h++) {
+				for (int t = max(0, w - 2); t <= min(wSize - 3, w); t++) {
+					ans += hypercubes[r][c][h][t];
+					//cout << "{" << r << "," << c << "," << h << "}\n";
+				}
+			}
+		}
+	}
+	//cout << ans;
+	if (current && (ans == 2 || ans == 3)) return true;
+	if (!current && ans == 3) return true;
+
+	return false;
+
 }
