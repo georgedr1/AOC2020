@@ -227,6 +227,18 @@ int main()
 		cout << "The value is: " << ans << "\n";
 		cout << "Finished in " << duration << " ms\n";
 		break;
+	case 18:
+		start = clock();
+		ans = weirdMath(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		start = clock();
+		ans = weirdMath2(filename);
+		duration = (clock() - start);
+		cout << "The value is: " << ans << "\n";
+		cout << "Finished in " << duration << " ms\n";
+		break;
 	default:
 		cout << "Invalid answer\n";
 	}
@@ -2411,4 +2423,133 @@ bool check4DNeighbors(vector<vector<vector<vector<bool>>>> hypercubes, int x, in
 
 	return false;
 
+}
+
+
+long long weirdMath(string filename) {
+
+	long long totalSum = 0;
+	stack<int> lineAns;
+	int pos;
+	int endPos;
+	int num;
+	char op;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			pos = 0;
+
+			totalSum += parseLine(line, &pos);
+			
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return totalSum;
+}
+
+
+long long parseLine(string line, int* pos) {
+	int endPos;
+	long long ans = 0;
+	bool op = 0; // 0=add,1=mult
+	int num;
+	while (*pos < line.size()) {
+		if (line[*pos] >= 48 && line[*pos]<=57) {
+			endPos = line.find_first_of(" )", *pos);
+			num = stoi(line.substr(*pos, endPos));
+			if (op) ans *= num;
+			else ans += num;
+			if (endPos == line.npos) return ans;
+			else *pos = line[endPos] == ')' ? endPos : endPos + 1;
+		}
+		else if (line[*pos] == '*') {
+			op = true;
+			*pos += 2;
+		}
+		else if (line[*pos] == '+') {
+			op = false;
+			*pos += 2;
+		}
+		else if (line[*pos] == '(') {
+			*pos += 1;
+			if (op) ans *= parseLine(line, pos);
+			else ans += parseLine(line, pos);
+		}
+		else if (line[*pos] == ')') {
+			*pos += 1;
+			return ans;
+		}
+		else if(line[*pos] == ' ') {
+			*pos += 1;
+		}
+		else {
+			cout << "error parsing line\n";
+		}
+	}
+
+	return ans;
+}
+
+
+long long weirdMath2(string filename) {
+
+	long long totalSum = 0;
+	stack<int> lineAns;
+	int pos;
+
+	ifstream file;
+	string line;
+
+
+	// Read file in and store in a list
+	file.open(filename);
+
+	if (file.is_open()) {
+
+		while (getline(file, line)) {
+			pos = 0;
+
+			totalSum += parseLine2(line, &pos);
+
+		}
+		file.close();
+	}
+	else cout << "Error Reading";
+
+	return totalSum;
+}
+
+
+long long parseLine2(string line, int* position) {
+	int pos = 0;
+
+	while (pos < line.size()) {
+		//cout << pos << " : " << line << "\n";
+		if (line[pos] == '(') {
+			line.replace(pos,1, "((");
+			pos += 2;
+		} else if (line[pos] == ')') {
+			line.replace(pos, 1, "))");
+			pos += 2;
+		}
+		else if (line[pos] == '*') {
+			line.replace(pos-1, 3, ") * (");
+			pos += 4;
+		}
+		else pos++;
+	}
+	line.insert(0, "(");
+	line.push_back(')');
+	//cout << line;
+	return parseLine(line, position);
 }

@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <numeric>
 #include <unordered_map>
+#include <stack>
 
 using namespace std;
 
@@ -166,3 +167,12 @@ bool check3DNeighbors(vector<vector<vector<bool>>> cubes, int x, int y, int z, i
 int conwayHyperCubes(string filename, int iterations);
 
 bool check4DNeighbors(vector<vector<vector<vector<bool>>>> hypercubes, int x, int y, int z, int w, int xSize, int ySize, int zSize, int wSize);
+
+
+long long weirdMath(string filename);
+
+long long parseLine(string line, int* pos);
+
+long long weirdMath2(string filename);
+
+long long parseLine2(string line, int* position);
